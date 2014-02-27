@@ -1,0 +1,247 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>ControlsInsight API by rapid7</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/rapid7/controls.rb">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/rapid7/controls.rb/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/rapid7/controls.rb/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>ControlsInsight API</h1>
+          <p></p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/rapid7">rapid7</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="controlsinsight-client-gem" class="anchor" href="#controlsinsight-client-gem"><span class="octicon octicon-link"></span></a>controlsinsight client gem</h1>
+
+<p><a href="https://travis-ci.org/erran-r7/controls.rb"><img src="https://travis-ci.org/erran-r7/controls.rb.png?branch=master" alt="Build Status"></a></p>
+
+<p>The <strong>controls</strong>insight (controls) gem interfaces with <a href="http://rapid7.github.io/controlsinsight.rb">Rapid7's <strong>controls</strong>insight API</a>.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">gem</span> <span class="s1">'controls'</span>
+</pre></div>
+
+<p>And then execute:</p>
+
+<div class="highlight highlight-bash"><pre>bundle
+</pre></div>
+
+<p>Or install it yourself as:</p>
+
+<div class="highlight highlight-bash"><pre>gem install controls
+</pre></div>
+
+<h2>
+<a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<ul>
+<li><a href="http://rapid7.github.io/controlsinsight.rb">API documentation</a></li>
+<li><a href="http://www.rubydoc.info/github/rapid7/controlsinsight.rb">YARD documentation for the Ruby client</a></li>
+</ul><h2>
+<a name="basic-resources" class="anchor" href="#basic-resources"><span class="octicon octicon-link"></span></a>Basic Resources</h2>
+
+<h3>
+<a name="authentication" class="anchor" href="#authentication"><span class="octicon octicon-link"></span></a>Authentication</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Controls</span><span class="o">.</span><span class="n">web_endpoint</span> <span class="o">=</span> <span class="s1">'https://nexpose.local:3780/insight/controls'</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">api_endpoint</span> <span class="o">=</span> <span class="s2">"</span><span class="si">#{</span><span class="no">Controls</span><span class="o">.</span><span class="n">web_endpoint</span><span class="si">}</span><span class="s2">/api/1.0"</span>
+
+<span class="c1"># If your endpoint uses a self-signed cert. turn off SSL cert. verification</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="kp">false</span>
+
+<span class="no">Controls</span><span class="o">.</span><span class="n">login</span> <span class="ss">:user</span> <span class="o">=&gt;</span> <span class="s1">'admin'</span><span class="p">,</span> <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="s1">'password'</span>
+
+<span class="no">Controls</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">api_methods</span>
+<span class="c1"># =&gt; [:applicable_assets, :assessments, :asset_search, :assets, :assets_by_configuration, :assets_by_guidance, ..., :uncovered_assets, :undefended_assets, :update_security_controls]</span>
+</pre></div>
+
+<h3>
+<a name="assessments" class="anchor" href="#assessments"><span class="octicon octicon-link"></span></a>Assessments</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># Retrieve all the assessments that have been ran</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">assessments</span>
+<span class="c1"># =&gt; [#&lt;Controls::Assessment: id: 1, timestamp: 2013-12-15 10:07:39 -0600, assessing: false, high_risk_asset_count: 18,</span>
+<span class="c1">#     medium_risk_asset_count: 0, low_risk_asset_count: 0, total_asset_count: 18, overall_risk_score: 1.1723226070935302&gt;]</span>
+
+<span class="c1"># Only retrieve a single assessment</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">assessments</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Controls::Assessment: id: 2, timestamp: 2014-02-06 17:35:02 -0600, assessing: false, high_risk_asset_count: 0,</span>
+<span class="c1">#    medium_risk_asset_count: 42, low_risk_asset_count: 0, total_asset_count: 42, overall_risk_score: 3.687419753008327&gt;</span>
+</pre></div>
+
+<h3>
+<a name="assets" class="anchor" href="#assets"><span class="octicon octicon-link"></span></a>Assets</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># Retrieve a list of all the assets that Controls has access to</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">assets</span>
+<span class="c1"># =&gt; [</span>
+<span class="c1">#      #&lt;Controls::Asset: discovered_at: 2013-12-15 09:55:47 -0600, operating_system: Windows 7 Professional Edition,</span>
+<span class="c1">#      operating_system_certainty: 1.0, security_control_findings: [...], risk_level: MEDIUM, risk_score:</span>
+<span class="c1">#      5.554266115196547, owner: Administrator, name: 10.4.19.25, host_name: CMMNCTR2K7R2-U, ipaddress: 10.4.19.25,</span>
+<span class="c1">#      uuid: db899a57-347c-4df9-9ce2-6932dc4adf38&gt;,</span>
+<span class="c1">#      ...</span>
+<span class="c1">#    ]</span>
+
+<span class="c1"># Only retrieve a single assessment</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">assets</span><span class="p">(</span><span class="s1">'335fb288-da73-4d3c-afe9-b6a1506bf907'</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Controls::Asset: discovered_at: 2013-12-15 09:55:48 -0600, operating_system: Windows 7 Enterprise Edition, </span>
+<span class="c1">#    operating_system_certainty: 1.0, security_control_findings: [...], risk_level: MEDIUM, risk_score: </span>
+<span class="c1">#    4.724118340950002, owner: Administrator, name: 10.4.19.24, host_name: V-OFC-COMPAT-P, ipaddress: 10.4.19.24,</span>
+<span class="c1">#    uuid: 335fb288-da73-4d3c-afe9-b6a1506bf907&gt;</span>
+</pre></div>
+
+<h3>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Controls</span><span class="o">.</span><span class="n">configurations</span>
+<span class="c1"># =&gt; [</span>
+<span class="c1">#      #&lt;Controls::Configuration: coverage: #&lt;Controls::CoverageItem: total: 42, covered: 1, uncovered: 41, percent_covered: 2.380952380952381&gt;, assessment_timestamp: 2014-02-06 17:58:06 -0600,</span>
+<span class="c1">#      name: unique-password, title: unique password&gt;</span>
+<span class="c1">#      ...,</span>
+<span class="c1">#      #&lt;Controls::Configuration: coverage: #&lt;Controls::CoverageItem: total: 3, covered: 3, uncovered: 0, percent_covered: 100.0&gt;, assessment_timestamp: 2014-02-06 17:58:06 -0600,</span>
+<span class="c1">#      name: email-attachment-filtering-enabled, title: E-mail client attachment filtering enabled&gt;</span>
+<span class="c1">#    ]</span>
+
+<span class="no">Controls</span><span class="o">.</span><span class="n">configurations</span><span class="p">(</span><span class="s1">'antivirus-installed'</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Controls::Configuration: coverage: #&lt;Dish::Plate:0x007fb052ce9e10&gt;, assessment_timestamp: 2014-02-06 17:58:06 -0600,</span>
+<span class="c1">#    name: antivirus-installed, title: antivirus installed&gt;</span>
+</pre></div>
+
+<h3>
+<a name="guidance" class="anchor" href="#guidance"><span class="octicon octicon-link"></span></a>Guidance</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># Retreive a list of guidance applicable to a specific threat</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">guidance_by_threat</span><span class="p">(</span><span class="s1">'overall-malware'</span><span class="p">)</span>
+<span class="c1"># =&gt; [...]</span>
+
+<span class="c1"># Only retrieve a single guidance by name</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">guidance</span><span class="p">(</span><span class="s1">'your-guidance-name-here'</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Dish::Plate: assessment_timestamp: 1391731086251, sans_reference: , dsd_reference: , nist_reference: , </span>
+<span class="c1">#    sections: [...], domain: Desktop, references: [...], target_grade: 3.2759693577089286, improvement_delta: </span>
+<span class="c1">#    0.007545795822296775, improvement_grade: 3.2759693577089286, name: enable-uac, title: Enable User Account Control (UAC)&gt;</span>
+
+<span class="no">Controls</span><span class="o">.</span><span class="n">prioritized_guidance_by_security_control</span><span class="p">(</span><span class="s1">'desktops-with-antivirus-deployed'</span><span class="p">)</span><span class="o">.</span><span class="n">count</span>
+<span class="c1"># =&gt; 3</span>
+</pre></div>
+
+<h3>
+<a name="security-controls" class="anchor" href="#security-controls"><span class="octicon octicon-link"></span></a>Security Controls</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Controls</span><span class="o">.</span><span class="n">security_controls</span>
+<span class="c1"># =&gt; [</span>
+<span class="c1">#      #&lt;Controls::SecurityControl: enabled: true, name: desktops-with-up-to-date-high-risk-applications&gt;,</span>
+<span class="c1">#      ...,</span>
+<span class="c1">#      #&lt;Controls::SecurityControl: enabled: true, name: desktops-with-email-attachment-filtering-enabled&gt;</span>
+<span class="c1">#    ]</span>
+
+<span class="no">Controls</span><span class="o">.</span><span class="n">security_controls</span><span class="p">(</span><span class="s1">'code-execution-prevention'</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Controls::SecurityControl: enabled: true, name: code-execution-prevention&gt;</span>
+</pre></div>
+
+<h3>
+<a name="security-control-coverage" class="anchor" href="#security-control-coverage"><span class="octicon octicon-link"></span></a>Security Control Coverage</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Controls</span><span class="o">.</span><span class="n">security_control_coverage</span>
+<span class="c1"># =&gt; [</span>
+<span class="c1">#      #&lt;Controls::SecurityControlCoverage: enabled: true, coverage: #&lt;Controls::CoverageItem: total: 20, covered: 6,</span>
+<span class="c1">#      uncovered: 14, percent_covered: 30.0&gt;,</span>
+<span class="c1">#      assessment_timestamp: 2014-02-06 17:58:06 -0600, name: desktops-with-up-to-date-high-risk-applications,</span>
+<span class="c1">#      title: high-risk applications up to date&gt;,</span>
+<span class="c1">#      ...,</span>
+<span class="c1">#      #&lt;Controls::SecurityControlCoverage: enabled: true, coverage: #&lt;Controls::CoverageItem: total: 3, covered: 3,</span>
+<span class="c1">#      uncovered: 0, percent_covered: 100.0&gt;,</span>
+<span class="c1">#      assessment_timestamp: 2014-02-06 17:58:06 -0600, name: desktops-with-email-attachment-filtering-enabled,</span>
+<span class="c1">#      title: e-mail client attachment filtering enabled&gt;</span>
+<span class="c1">#    ]</span>
+
+<span class="no">Controls</span><span class="o">.</span><span class="n">security_controls</span><span class="p">(</span><span class="s1">'code-execution-prevention'</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Controls::SecurityControlCoverage: enabled: true, coverage: #&lt;Controls::CoverageItem: total: 42, covered: 0, uncovered: 42, percent_covered: 0.0&gt;,</span>
+<span class="c1">#    assessment_timestamp: 2014-02-06 17:58:06 -0600, name: code-execution-prevention, title: code execution prevention deployed&gt;</span>
+</pre></div>
+
+<h3>
+<a name="threats" class="anchor" href="#threats"><span class="octicon octicon-link"></span></a>Threats</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># Retrieve a list of all the threats</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">threats</span>
+<span class="c1"># =&gt; [#&lt;Controls::Threat: grade: 3, assessment_timestamp: 2014-02-06 17:58:06 -0600, grade_level: POOR, name: overall-malware, title: Overall&gt;]</span>
+
+<span class="c1"># Only retrieve a single threat</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">threats</span><span class="p">(</span><span class="s1">'overall-malware'</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Controls::Threat: grade: 3, assessment_timestamp: 2014-02-06 17:58:06 -0600, grade_level: POOR, name: overall-malware, title: Overall&gt;</span>
+</pre></div>
+
+<h3>
+<a name="threat-vectors" class="anchor" href="#threat-vectors"><span class="octicon octicon-link"></span></a>Threat Vectors</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># Retrieve a list of all the threat vectors</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">threat_vectors</span>
+<span class="c1"># =&gt; [#&lt;Controls::ThreatVector: grade: 3, assessment_timestamp: 2014-02-06 17:58:06 -0600, grade_level: POOR, name:</span>
+<span class="n">network</span><span class="o">-</span><span class="n">borne</span><span class="p">,</span> <span class="ss">title</span><span class="p">:</span> <span class="no">Network</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">,</span> <span class="c1">#&lt;Controls::ThreatVector: grade: 3, assessment_timestamp: 2014-02-06 17:58:06 -0600, grade_level: POOR, name: email-borne, title: E-mail&gt;]</span>
+
+<span class="c1"># Only retrieve a single threat vector</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">threat_vectors</span><span class="p">(</span><span class="s1">'network-borne'</span><span class="p">)</span>
+<span class="c1"># =&gt; #&lt;Controls::ThreatVector: grade: 3, assessment_timestamp: 2014-02-06 17:58:06 -0600, grade_level: POOR, name: network-borne, title: Network&gt;</span>
+</pre></div>
+
+<h3>
+<a name="trends" class="anchor" href="#trends"><span class="octicon octicon-link"></span></a>Trends</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="c1"># Retrieve a set of statistics over time</span>
+<span class="no">Controls</span><span class="o">.</span><span class="n">threat_trends</span><span class="p">(</span><span class="s1">'overall-malware'</span><span class="p">)</span>
+<span class="c1"># =&gt; [#&lt;Controls::Trend: grade: 1.1723226070935302, assessment_timestamp: 2013-12-15 10:07:39 -0600, total_assets: 18&gt;,</span>
+<span class="c1">#     #&lt;Controls::Trend: grade: 3.2684235618866317, assessment_timestamp: 2014-02-06 17:58:06 -0600, total_assets: 42&gt;]</span>
+
+<span class="no">Controls</span><span class="o">.</span><span class="n">threat_vector_trends</span><span class="p">(</span><span class="s1">'network-borne'</span><span class="p">)</span>
+<span class="c1"># =&gt; [#&lt;Controls::Trend: grade: 1.0187000110028335, assessment_timestamp: 2013-12-15 10:07:39 -0600, total_assets: 18&gt;,</span>
+<span class="c1">#     #&lt;Controls::Trend: grade: 3.497538201261831, assessment_timestamp: 2014-02-06 17:58:06 -0600, total_assets: 42&gt;]</span>
+
+<span class="no">Controls</span><span class="o">.</span><span class="n">configuration_trends</span><span class="p">(</span><span class="s1">'antivirus-installed'</span><span class="p">)</span>
+<span class="c1"># =&gt; [#&lt;Controls::Trend: assessment_timestamp: 2013-12-15 10:07:39 -0600, total_assets: 18, covered_assets: 0,</span>
+<span class="c1">#     covered_percentage: 0.0&gt;, #&lt;Controls::Trend: assessment_timestamp: 2014-02-06 17:58:06 -0600, total_assets: 42,</span>
+<span class="c1">#     covered_assets: 9, covered_percentage: 21.428571428571427&gt;]</span>
+</pre></div>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>This project was created by <a href="http://erran.github.io">Erran Carey (@erran)</a> and licensed under <a href="LICENSE.md">the MIT License</a>.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
